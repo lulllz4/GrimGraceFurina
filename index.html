@@ -82,6 +82,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   overflow:auto;
   display:grid;place-items:center;
   padding:clamp(1rem,4vw,3rem) 1rem clamp(2rem,6vw,4rem);
+  background:
+    radial-gradient(58% 46% at 50% 42%, rgba(6,15,28,.55), transparent 70%),
+    linear-gradient(180deg,rgba(3,8,16,.86),rgba(2,5,11,.95));
   transition:opacity .7s ease,transform .7s ease;
 }
 .bill-screen.gone{opacity:0;transform:scale(1.04) translateY(-2%);pointer-events:none}
@@ -152,7 +155,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .vignette{width:clamp(4.5rem,14vw,6.5rem);margin:.6rem auto;color:var(--ink);display:block}
 
 /* ═══════════ КАБИНЕТ ═══════════ */
-.study{position:fixed;inset:0;z-index:5;display:grid;grid-template-rows:auto minmax(0,1fr)}
+.study{
+  position:fixed;inset:0;z-index:5;display:grid;grid-template-rows:auto minmax(0,1fr);
+  opacity:0;visibility:hidden;
+  transition:opacity .9s ease .15s,visibility 0s linear .15s;
+}
+.study.revealed{opacity:1;visibility:visible;transition:opacity .9s ease,visibility 0s}
 
 .top{
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -462,13 +470,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   position:absolute;inset:0;
   filter:drop-shadow(0 40px 46px rgba(0,0,0,.85));
   display:none;
+  place-items:center;align-content:center;
 }
+.stack.wide .under{display:none}
 .cut-paper{
-  position:relative;height:100%;
+  position:relative;width:100%;height:auto;max-height:100%;
   color:var(--news-ink);
   background:linear-gradient(172deg,#efe8d6 0%,var(--news) 40%,var(--news-2) 100%);
   padding:clamp(1rem,2.6vw,1.9rem) clamp(1rem,3vw,2.2rem) clamp(1.2rem,3vw,2rem);
-  display:grid;grid-template-rows:auto auto minmax(0,1fr);
+  display:grid;grid-template-rows:auto auto minmax(0,auto);
   overflow:hidden;
 }
 .cut-paper::before{
@@ -508,11 +518,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .cut-main{
   display:grid;grid-template-columns:minmax(0,1fr) clamp(8rem,17%,11rem);
   gap:clamp(.8rem,2vw,1.4rem);min-height:0;padding-top:.7rem;
+  align-items:start;
 }
 .cut-cols{
   columns:2;column-gap:1.3rem;
   column-rule:1px solid rgba(36,31,23,.35);
-  overflow:auto;min-height:0;
+  overflow:auto;min-height:0;min-width:0;
   font-size:clamp(.7rem,.66rem + .2vw,.8rem);
   line-height:1.62;text-align:justify;hyphens:auto;
   scrollbar-width:thin;scrollbar-color:rgba(36,31,23,.3) transparent;
@@ -799,7 +810,7 @@ const CHARACTER = {
   signature: `де Фонтен`,                // подпись внизу листа
   initial: `C`,                          // буква, оттиснутая на сургуче
 
-  portrait: `https://lulllz4.github.io/GrimGraceFurina/furina.jpg`,                
+  portrait: `https://lulllz4.github.io/GrimGraceFurina/furina.jpg`,
   plateCaption: `Съ натуры. Лондонъ, 1856`,
 
   /* ── ГАЗЕТНАЯ ВЫРЕЗКА: сюда попадают листы I–IV ── */
@@ -1054,7 +1065,7 @@ const CHARACTER = {
 
     if(l.clip){
       $('cut-paper').innerHTML = buildCutting(i);
-      cutting.style.display='block'; leaf.style.display='none';
+      cutting.style.display='grid'; leaf.style.display='none';
       stack.classList.add('wide');
       markIndex(i); cur=i; return;
     }
@@ -1120,8 +1131,17 @@ const CHARACTER = {
 
   /* афиша ↔ бумаги */
   const bs = $('bill-screen');
-  $('enter').addEventListener('click', ()=>{ bs.classList.add('gone'); setTimeout(()=>go(0), reduced?0:250); });
-  $('back-bill').addEventListener('click', ()=>{ bs.classList.remove('gone'); $('enter').focus(); });
+  const study = document.querySelector('.study');
+  $('enter').addEventListener('click', ()=>{
+    study.classList.add('revealed');
+    bs.classList.add('gone');
+    setTimeout(()=>go(0), reduced?0:250);
+  });
+  $('back-bill').addEventListener('click', ()=>{
+    bs.classList.remove('gone');
+    study.classList.remove('revealed');
+    $('enter').focus();
+  });
 
   /* все бумаги */
   const sheaf = $('sheaf');
