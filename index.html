@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бумаги</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,600&family=Vollkorn:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* обои и газовый свет */
+  --wall:#0a1728;
+  --wall-2:#050d18;
+  --figure:#16304f;
+
+  /* бумага: синяя верже, состаренная */
+  --paper:#dae3ec;
+  --paper-2:#c3d0dd;
+  --paper-3:#aab9c9;
+
+  /* чернила Стивенса, сине-чёрные */
+  --ink:#141f38;
+  --ink-2:#3d4e70;
+  --ink-3:#6f7f9d;
+  --wax:#243a86;
+  --gilt:#a8874c;
+
+  --disp:"Playfair Display",Georgia,serif;
+  --text:"Vollkorn",Georgia,serif;
+  --hand:"Marck Script",cursive;
+
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--wall-2);
+  font-family:var(--text);
+  color:var(--paper);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+::selection{background:var(--wax);color:#fff}
+:focus-visible{outline:2px solid var(--gilt);outline-offset:3px}
+
+/* ═══════════ ОБОИ, ГАЗОВЫЙ РОЖОК ═══════════ */
+.room{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--wall-2)}
+.paper-wall{position:absolute;inset:0;width:100%;height:100%}
+.gas{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(46% 38% at 50% 22%, rgba(214,196,150,.20), transparent 66%),
+    radial-gradient(90% 70% at 50% 45%, rgba(20,46,80,.55), transparent 70%),
+    linear-gradient(180deg,rgba(5,13,24,.15),rgba(5,13,24,.92));
+  animation:flicker 7s ease-in-out infinite;
+}
+@keyframes flicker{
+  0%,100%{opacity:1}
+  22%{opacity:.94}
+  27%{opacity:1}
+  61%{opacity:.96}
+  64%{opacity:1}
+  88%{opacity:.93}
+}
+.room-grain{position:absolute;inset:0;background-image:var(--grain);opacity:.2;mix-blend-mode:overlay}
+
+/* ═══════════ АФИША (первый экран) ═══════════ */
+.bill-screen{
+  position:fixed;inset:0;z-index:30;
+  overflow:auto;
+  display:grid;place-items:center;
+  padding:clamp(1rem,4vw,3rem) 1rem clamp(2rem,6vw,4rem);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.bill-screen.gone{opacity:0;transform:scale(1.04) translateY(-2%);pointer-events:none}
+
+.bill{
+  position:relative;
+  width:min(100%,30rem);
+  padding:clamp(1.2rem,4vw,2.4rem) clamp(1rem,4vw,2.2rem) clamp(1.6rem,5vw,2.6rem);
+  color:var(--ink);
+  text-align:center;
+  background:linear-gradient(176deg,#e4ebf1,var(--paper) 30%,var(--paper-2));
+  box-shadow:0 40px 80px -34px #000, 0 0 0 1px rgba(20,31,56,.25);
+  transform:rotate(-.5deg);
+}
+.bill::before{
+  content:"";position:absolute;inset:0;background-image:var(--grain);
+  opacity:.34;mix-blend-mode:multiply;pointer-events:none;
+}
+.bill::after{
+  content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.42) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(20,31,56,.06) 0 1px,transparent 1px 26px),
+    radial-gradient(circle at 14% 18%, rgba(150,120,70,.16), transparent 12%),
+    radial-gradient(circle at 82% 62%, rgba(150,120,70,.13), transparent 9%),
+    radial-gradient(circle at 60% 91%, rgba(150,120,70,.11), transparent 8%);
+}
+.bill > *{position:relative;z-index:1}
+
+.rule-h{height:0;border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);margin:.55rem 0;}
+.rule-t{height:0;border-top:1px solid var(--ink);margin:.5rem 0}
+.bill .tiny{
+  font-family:var(--disp);font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;
+}
+.bill .royal{
+  font-family:var(--disp);font-weight:900;
+  font-size:clamp(1rem,.7rem + 1.6vw,1.5rem);
+  letter-spacing:.1em;text-transform:uppercase;line-height:1.1;
+}
+.bill .sm{font-size:.8rem;font-style:italic;color:var(--ink-2);line-height:1.5}
+.bill .big{
+  font-family:var(--disp);font-weight:900;
+  font-size:clamp(2.4rem,1rem + 8.6vw,4.6rem);
+  line-height:.88;text-transform:uppercase;letter-spacing:-.01em;
+  margin:.35rem 0;
+  text-wrap:balance;
+}
+.bill .mid{
+  font-family:var(--disp);font-weight:700;
+  font-size:clamp(1rem,.8rem + 1.4vw,1.5rem);
+  letter-spacing:.14em;text-transform:uppercase;line-height:1.2;
+}
+.bill .squeeze{transform:scaleY(1.35);transform-origin:center;display:inline-block}
+.bill .tag{font-style:italic;font-size:.92rem;line-height:1.7;color:var(--ink-2);padding:0 .4rem}
+.fleuron{font-size:1rem;color:var(--ink-2);letter-spacing:.6em;padding-left:.6em}
+
+.enter{
+  margin-top:1rem;
+  font-family:var(--disp);font-weight:700;
+  font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--paper);background:var(--ink);
+  padding:.9rem 1.8rem;border:1px solid var(--ink);
+  transition:background .3s,color .3s,letter-spacing .3s;
+}
+.enter:hover{background:var(--wax);letter-spacing:.36em}
+
+/* гравюра-виньетка на афише */
+.vignette{width:clamp(4.5rem,14vw,6.5rem);margin:.6rem auto;color:var(--ink);display:block}
+
+/* ═══════════ КАБИНЕТ ═══════════ */
+.study{position:fixed;inset:0;z-index:5;display:grid;grid-template-rows:auto minmax(0,1fr)}
+
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.65rem clamp(.7rem,3vw,1.6rem);
+  border-bottom:1px solid rgba(168,135,76,.28);
+  background:linear-gradient(180deg,rgba(5,13,24,.9),transparent);
+}
+.top .nm{
+  font-family:var(--disp);font-size:clamp(.66rem,.6rem + .3vw,.8rem);
+  letter-spacing:.28em;text-transform:uppercase;color:var(--gilt);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.top .sub{font-size:.66rem;font-style:italic;color:var(--ink-3);margin-top:.1rem;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-tools{display:flex;gap:.35rem;flex:none}
+.tool{
+  font-family:var(--disp);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:#96a6c2;padding:.5rem .75rem;border:1px solid rgba(150,166,194,.3);
+  transition:.25s;white-space:nowrap;
+}
+.tool:hover{color:var(--gilt);border-color:var(--gilt);background:rgba(168,135,76,.09)}
+
+.desk{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(13rem,17rem) minmax(0,1fr);
+  gap:clamp(.8rem,2.5vw,2rem);
+  padding:clamp(.8rem,2.5vh,1.8rem) clamp(.8rem,3vw,2.2rem) clamp(.9rem,3vh,2rem);
+  align-items:stretch;
+}
+
+/* — фронтиспис — */
+.aside{display:grid;grid-template-rows:auto minmax(0,1fr);gap:1rem;min-height:0}
+
+.plate{
+  background:linear-gradient(176deg,#e4ebf1,var(--paper-2));
+  padding:.7rem .7rem .55rem;
+  box-shadow:0 22px 44px -26px #000,0 0 0 1px rgba(20,31,56,.3);
+  transform:rotate(-1deg);
+  position:relative;
+}
+.plate::before{content:"";position:absolute;inset:0;background-image:var(--grain);
+  opacity:.3;mix-blend-mode:multiply;pointer-events:none}
+.plate-win{
+  position:relative;aspect-ratio:3/4;overflow:hidden;
+  border:1px solid var(--ink);
+  background:var(--paper-3);
+  display:grid;place-items:center;
+}
+.plate-win img{width:100%;height:100%;object-fit:cover;object-position:top center;
+  filter:grayscale(1) contrast(1.12) brightness(1.02)}
+.plate-win .tone{
+  position:absolute;inset:0;
+  background:linear-gradient(170deg,#2c4a7a,#0f1c36);
+  mix-blend-mode:color;opacity:.85;pointer-events:none;
+}
+.plate-win .veil{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(52deg,rgba(20,31,56,.12) 0 1px,transparent 1px 4px);
+}
+.plate cap{
+  display:block;text-align:center;font-style:italic;color:var(--ink-2);
+  font-size:.66rem;letter-spacing:.06em;margin-top:.5rem;
+}
+
+/* — оглавление — */
+.index{
+  background:linear-gradient(176deg,#e2e9f0,var(--paper-2));
+  padding:.9rem .85rem 1rem;
+  box-shadow:0 22px 44px -26px #000,0 0 0 1px rgba(20,31,56,.28);
+  transform:rotate(.5deg);
+  overflow:auto;min-height:0;
+  position:relative;
+  scrollbar-width:thin;scrollbar-color:rgba(20,31,56,.3) transparent;
+}
+.index::before{content:"";position:absolute;inset:0;background-image:var(--grain);
+  opacity:.28;mix-blend-mode:multiply;pointer-events:none}
+.index h4{
+  position:relative;
+  font-family:var(--disp);font-weight:700;font-size:.6rem;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--ink);
+  text-align:center;padding-bottom:.4rem;margin-bottom:.5rem;
+  border-bottom:2px solid var(--ink);
+}
+.entry{
+  position:relative;
+  display:flex;align-items:baseline;gap:.35rem;
+  width:100%;padding:.34rem .2rem .34rem 1.1rem;
+  color:var(--ink-2);
+  font-size:.82rem;
+  transition:color .22s;
+}
+.entry .rn{font-family:var(--disp);font-weight:700;font-size:.72rem;letter-spacing:.04em;flex:none;min-width:1.9rem}
+.entry .nm{flex:none;white-space:nowrap}
+.entry .dots{flex:1;border-bottom:1px dotted rgba(20,31,56,.45);translate:0 -.22rem;min-width:.8rem}
+.entry .pg{font-family:var(--disp);font-size:.7rem;flex:none;opacity:.7}
+.entry:hover{color:var(--ink)}
+.entry[aria-current="true"]{color:var(--ink);font-weight:600}
+.entry[aria-current="true"]::before{
+  content:"☞";
+  position:absolute;left:-.05rem;top:.24rem;
+  font-family:var(--text);font-size:.85rem;color:var(--wax);
+  animation:point .5s ease both;
+}
+@keyframes point{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+
+/* ═══════════ ЛИСТ ═══════════ */
+.leaf-area{position:relative;min-height:0}
+
+.under{
+  position:absolute;inset:0;
+  background:linear-gradient(170deg,var(--paper-2),var(--paper-3));
+  box-shadow:0 20px 40px -26px #000;
+}
+.under.u1{transform:rotate(-1.4deg) translate(-9px,6px)}
+.under.u2{transform:rotate(1deg) translate(8px,11px);filter:brightness(.94)}
+
+.leaf{
+  position:absolute;inset:0;
+  color:var(--ink);
+  background:linear-gradient(176deg,#e6edf3 0%,var(--paper) 34%,var(--paper-2) 100%);
+  box-shadow:
+    0 46px 80px -34px rgba(0,0,0,.95),
+    0 0 0 1px rgba(20,31,56,.22),
+    inset -18px 0 26px -24px rgba(20,31,56,.7);
+  display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+  overflow:hidden;
+  transform:rotate(-.4deg);
+}
+/* верже: тонкие вержеры + понтюзо, зерно, лисьи пятна */
+.leaf::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;mix-blend-mode:multiply;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(20,31,56,.055) 0 1px,transparent 1px 27px);
+}
+.leaf::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;mix-blend-mode:multiply;
+  background-image:var(--grain),
+    radial-gradient(circle at 9% 16%, rgba(150,118,64,.17), transparent 11%),
+    radial-gradient(circle at 88% 34%, rgba(150,118,64,.13), transparent 8%),
+    radial-gradient(circle at 74% 88%, rgba(150,118,64,.15), transparent 10%),
+    radial-gradient(circle at 22% 72%, rgba(150,118,64,.1), transparent 7%);
+  opacity:.9;
+}
+.leaf > *{position:relative;z-index:1}
+/* загнутый угол */
+.curl{
+  position:absolute;right:0;bottom:0;z-index:2;width:44px;height:44px;pointer-events:none;
+  background:linear-gradient(315deg,#f2f6fa 0 46%,rgba(20,31,56,.3) 47%,transparent 52%);
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  filter:drop-shadow(-3px -3px 4px rgba(0,0,0,.25));
+}
+
+.leaf-head{padding:clamp(1.3rem,3.6vh,2.2rem) clamp(1.2rem,4vw,3.2rem) 0;text-align:center}
+.leaf-head .over{
+  font-family:var(--disp);font-size:.58rem;letter-spacing:.36em;text-transform:uppercase;
+  color:var(--ink-2);
+}
+.leaf-head .rn{
+  font-family:var(--disp);font-weight:700;
+  font-size:clamp(.8rem,.72rem + .4vw,1rem);letter-spacing:.24em;
+  margin:.7rem 0 .3rem;
+}
+.leaf-head h2{
+  font-family:var(--disp);font-weight:900;
+  font-size:clamp(1.6rem,.9rem + 3.4vw,3rem);
+  line-height:.98;text-transform:uppercase;letter-spacing:.005em;
+}
+.leaf-head .divider{
+  display:flex;align-items:center;justify-content:center;gap:.7rem;
+  color:var(--ink-2);margin:.7rem 0 0;
+}
+.leaf-head .divider i{height:1px;flex:1;max-width:6rem;background:currentColor;opacity:.55}
+
+.leaf-body{
+  overflow:auto;
+  padding:clamp(.9rem,2.4vh,1.5rem) clamp(1.2rem,4vw,3.2rem) 1rem;
+  scrollbar-width:thin;scrollbar-color:rgba(20,31,56,.28) transparent;
+}
+.leaf-body::-webkit-scrollbar{width:5px}
+.leaf-body::-webkit-scrollbar-thumb{background:rgba(20,31,56,.28)}
+
+/* рукописные ответы на короткие пункты */
+.answer{
+  font-family:var(--hand);
+  font-size:clamp(2.2rem,1.2rem + 4.6vw,4rem);
+  line-height:1.1;color:var(--wax);
+  transform:rotate(-.8deg);
+  margin:.4rem 0 .2rem;
+}
+.ruleline{height:0;border-bottom:1px solid rgba(20,31,56,.35);margin:.2rem 0 1.1rem}
+
+.note{font-size:clamp(.86rem,.82rem + .22vw,.98rem);line-height:1.8;
+  color:var(--ink-2);font-style:italic;max-width:52ch}
+
+.prose p{
+  font-size:clamp(.9rem,.86rem + .25vw,1.03rem);
+  line-height:1.85;color:#1a2740;max-width:60ch;
+  text-align:justify;hyphens:auto;
+}
+.prose p+p{margin-top:.2em;text-indent:2.2em}
+.prose p:first-child::first-letter{
+  font-family:var(--disp);font-weight:900;float:left;
+  font-size:3.4em;line-height:.82;padding:.06em .12em 0 0;color:var(--wax);
+}
+.traits{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem}
+.traits li{
+  font-family:var(--disp);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);border:1px solid rgba(20,31,56,.4);padding:.3rem .6rem;
+  background:rgba(255,255,255,.3);
+}
+.canons{list-style:none;display:grid;gap:.7rem}
+.canons li{
+  display:grid;grid-template-columns:auto 1fr;gap:.75rem;align-items:baseline;
+  font-size:clamp(.88rem,.85rem + .22vw,1rem);line-height:1.8;color:#1a2740;
+}
+.canons li::before{content:"❧";color:var(--wax);font-size:.8em;opacity:.8}
+.saying{
+  margin:1.2rem 0 .4rem;padding:.2rem 0 .2rem 1.1rem;
+  border-left:2px solid var(--wax);
+  font-family:var(--hand);font-size:clamp(1.4rem,1.1rem + 1.6vw,2.1rem);
+  line-height:1.25;color:var(--wax);
+}
+.saying span{
+  display:block;font-family:var(--disp);font-size:.58rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--ink-2);margin-top:.6rem;
+}
+.handle{
+  font-family:var(--hand);font-size:clamp(2rem,1.3rem + 3.4vw,3.4rem);
+  color:var(--wax);text-decoration:none;display:inline-block;
+  transform:rotate(-1.4deg);margin-bottom:.7rem;
+}
+.handle:hover{text-decoration:underline;text-underline-offset:8px}
+.margin-note{
+  font-family:var(--hand);font-size:clamp(1.1rem,.95rem + .8vw,1.5rem);
+  color:var(--ink-2);line-height:1.3;margin-top:1.3rem;padding-left:1.4rem;
+  border-left:1px solid rgba(61,78,112,.4);transform:rotate(-1deg);max-width:32ch;
+}
+
+/* сургучная печать */
+.seal{
+  position:absolute;z-index:3;
+  right:clamp(.9rem,4vw,2.6rem);bottom:clamp(3.4rem,9vh,5rem);
+  width:clamp(4.2rem,11vw,5.8rem);
+  transform:rotate(-9deg);
+  filter:drop-shadow(0 5px 7px rgba(0,0,0,.45));
+  pointer-events:none;
+}
+
+.leaf-foot{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;
+  padding:.6rem clamp(1.2rem,4vw,3.2rem) clamp(.8rem,2.2vh,1.3rem);
+  font-family:var(--disp);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-2);border-top:1px solid rgba(20,31,56,.3);
+}
+.leaf-foot .catch{
+  font-family:var(--text);font-style:italic;letter-spacing:0;text-transform:none;
+  font-size:.8rem;color:var(--ink-2);
+}
+.leaf-foot .sig{font-family:var(--hand);font-size:1.5rem;letter-spacing:0;text-transform:none;
+  color:var(--wax);transform:rotate(-2deg);line-height:1}
+
+/* перекладывание бумаг */
+@keyframes lay-out{to{transform:translate(-13%,9%) rotate(-6deg);opacity:0}}
+@keyframes lay-in{
+  0%{transform:translate(10%,-8%) rotate(6deg);opacity:0}
+  58%{transform:translate(0,1.2%) rotate(-1.4deg);opacity:1}
+  80%{transform:translate(0,-.4%) rotate(.4deg)}
+  100%{transform:translate(0,0) rotate(-.4deg);opacity:1}
+}
+.leaf.out{animation:lay-out .32s cubic-bezier(.55,0,.9,.35) forwards}
+.leaf.in{animation:lay-in .8s cubic-bezier(.2,.9,.3,1) both}
+
+/* ═══════════ ВСЕ БУМАГИ ═══════════ */
+.sheaf{
+  position:fixed;inset:0;z-index:50;background:rgba(4,10,20,.96);
+  overflow:auto;padding:clamp(1.4rem,5vw,3.5rem) 1rem 5rem;
+  opacity:0;visibility:hidden;transition:opacity .35s;
+}
+.sheaf.on{opacity:1;visibility:visible}
+.sheaf-inner{
+  width:min(100%,42rem);margin-inline:auto;color:var(--ink);
+  background:linear-gradient(176deg,#e6edf3,var(--paper-2));
+  padding:clamp(1.5rem,5vw,3.4rem);
+  box-shadow:0 40px 80px -30px #000;
+}
+.sheaf-inner h2{font-family:var(--disp);font-weight:900;text-transform:uppercase;
+  font-size:clamp(1.7rem,1.2rem + 2.6vw,2.9rem);line-height:1;text-align:center}
+.sheaf-inner .divider{display:flex;align-items:center;gap:.7rem;color:var(--ink-2);margin:1rem 0 1.4rem}
+.sheaf-inner .divider i{height:1px;flex:1;background:currentColor;opacity:.5}
+.sheaf-inner section{border-top:1px solid rgba(20,31,56,.25);padding-top:1.1rem;margin-top:1.5rem}
+.sheaf-inner h3{font-family:var(--disp);font-weight:700;font-size:.62rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--wax);margin-bottom:.7rem}
+.sheaf .close{
+  position:fixed;top:.8rem;right:.8rem;z-index:2;font-family:var(--disp);
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:.6rem .9rem;border:1px solid var(--gilt);color:var(--gilt);background:rgba(5,13,24,.93);
+}
+
+/* ═══════════ УЗКИЕ ЭКРАНЫ ═══════════ */
+@media (max-width:840px){
+  .desk{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:.6rem;padding:.6rem .6rem .5rem}
+  .aside{
+    grid-row:2;grid-template-rows:none;grid-template-columns:auto minmax(0,1fr);
+    gap:.5rem;align-items:center;
+  }
+  .plate{width:3.4rem;padding:.25rem;transform:none}
+  .plate cap{display:none}
+  .index{
+    transform:none;padding:.4rem .5rem;overflow-x:auto;overflow-y:hidden;
+  }
+  .index h4{display:none}
+  .index .list{display:flex;gap:.15rem}
+  .entry{padding:.4rem .55rem;width:auto;flex:none;justify-content:center}
+  .entry .nm,.entry .dots,.entry .pg{display:none}
+  .entry .rn{min-width:0;font-size:.8rem}
+  .entry[aria-current="true"]::before{left:50%;top:-.05rem;translate:-50% 0;font-size:.6rem}
+  .entry[aria-current="true"]{background:rgba(20,31,56,.1)}
+  .under.u2{display:none}
+  .prose p{text-align:left}
+  .seal{width:3.4rem;bottom:auto;top:22%;right:.6rem;opacity:.9}
+  .curl{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ комната ═══ -->
+<div class="room">
+  <svg class="paper-wall" aria-hidden="true">
+    <defs>
+      <pattern id="lys" width="86" height="86" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+        <g fill="#16304f" opacity=".55" transform="translate(23,20) scale(1.05)">
+          <path d="M20 2c2.4 6 5.6 9.6 5.6 14 0 3.9-2.6 5.8-5.6 5.8s-5.6-1.9-5.6-5.8c0-4.4 3.2-8 5.6-14z"/>
+          <path d="M14.4 13.6c-4.6-1.4-9.4.9-9.4 5.4 0 4.4 4.4 6.8 8.4 5-2.8-1.7-3.4-5-1.8-7.3.5-.8 1.9-2.5 2.8-3.1z"/>
+          <path d="M25.6 13.6c4.6-1.4 9.4.9 9.4 5.4 0 4.4-4.4 6.8-8.4 5 2.8-1.7 3.4-5 1.8-7.3-.5-.8-1.9-2.5-2.8-3.1z"/>
+          <rect x="12" y="24" width="16" height="3.2" rx=".6"/>
+          <path d="M20 29c1.2 4.6 2.4 6.8 2.4 9.4h-4.8c0-2.6 1.2-4.8 2.4-9.4z"/>
+        </g>
+        <g fill="#16304f" opacity=".3" transform="translate(66,63) scale(.5)">
+          <circle cx="0" cy="0" r="4"/>
+        </g>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="#0a1728"/>
+    <rect width="100%" height="100%" fill="url(#lys)"/>
+  </svg>
+  <div class="gas"></div>
+  <div class="room-grain"></div>
+</div>
+
+<!-- ═══ АФИША ═══ -->
+<div class="bill-screen" id="bill-screen">
+  <div class="bill">
+    <p class="tiny">Под высочайшим покровительством</p>
+    <div class="rule-t"></div>
+    <p class="royal" id="b-theatre">—</p>
+    <div class="rule-h"></div>
+    <p class="sm" id="b-when">—</p>
+    <p class="mid"><span class="squeeze">единственный вечер</span></p>
+    <div class="rule-t"></div>
+
+    <p class="tiny">имею честь представить</p>
+    <h1 class="big" id="b-name">—</h1>
+    <p class="mid" id="b-role">—</p>
+
+    <svg class="vignette" viewBox="0 0 120 96" aria-hidden="true">
+      <defs>
+        <clipPath id="ov"><ellipse cx="60" cy="48" rx="46" ry="42"/></clipPath>
+      </defs>
+      <g clip-path="url(#ov)">
+        <rect width="120" height="96" fill="none"/>
+        <g stroke="currentColor" stroke-width=".7" opacity=".5">
+          <path d="M-10 4h140M-10 12h140M-10 20h140M-10 28h140M-10 36h140M-10 44h140M-10 52h140M-10 60h140M-10 68h140M-10 76h140M-10 84h140M-10 92h140"/>
+        </g>
+        <path d="M60 16c17 0 27 14 27 31 0 20-12 36-27 43-15-7-27-23-27-43 0-17 10-31 27-31z" fill="#dae3ec"/>
+        <path d="M60 44c-6-7-18-8-24-3-3 5-1 14 6 18 7 3 14-2 18-8 4 6 11 11 18 8 7-4 9-13 6-18-6-5-18-4-24 3z" fill="currentColor"/>
+        <path d="M42 47c4-5 12-6 16-2-4 5-12 7-16 2z" fill="#dae3ec"/>
+        <path d="M78 47c-4-5-12-6-16-2 4 5 12 7 16 2z" fill="#dae3ec"/>
+        <path d="M50 60c2 4 4 7 4 9a4.4 4.4 0 0 1-8 0c0-2 2-5 4-9z" fill="currentColor"/>
+      </g>
+      <ellipse cx="60" cy="48" rx="46" ry="42" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <ellipse cx="60" cy="48" rx="49" ry="45" fill="none" stroke="currentColor" stroke-width=".6"/>
+    </svg>
+
+    <p class="fleuron">❦ ❦ ❦</p>
+    <div class="rule-t"></div>
+    <p class="tag" id="b-tag">—</p>
+    <div class="rule-h"></div>
+    <p class="tiny">бумаги, до сего дня не оглашавшиеся</p>
+    <button class="enter" id="enter">Читать</button>
+  </div>
+</div>
+
+<!-- ═══ КАБИНЕТ ═══ -->
+<div class="study">
+  <div class="top">
+    <div>
+      <div class="nm" id="t-name">—</div>
+      <div class="sub" id="t-sub">—</div>
+    </div>
+    <div class="top-tools">
+      <button class="tool" id="open-sheaf">Все бумаги</button>
+      <button class="tool" id="back-bill">Афиша</button>
+    </div>
+  </div>
+
+  <div class="desk">
+    <div class="aside">
+      <figure class="plate">
+        <div class="plate-win" id="plate-win"></div>
+        <cap id="plate-cap">—</cap>
+      </figure>
+      <nav class="index" aria-label="Оглавление">
+        <h4>Содержание</h4>
+        <div class="list" id="index-list"></div>
+      </nav>
+    </div>
+
+    <div class="leaf-area">
+      <div class="under u2" aria-hidden="true"></div>
+      <div class="under u1" aria-hidden="true"></div>
+
+      <article class="leaf" id="leaf">
+        <header class="leaf-head">
+          <p class="over" id="l-over">—</p>
+          <p class="rn" id="l-rn">—</p>
+          <h2 id="l-title">—</h2>
+          <div class="divider" aria-hidden="true"><i></i>❦<i></i></div>
+        </header>
+
+        <div class="leaf-body" id="l-body"></div>
+
+        <svg class="seal" id="seal" viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <radialGradient id="waxg" cx=".36" cy=".3">
+              <stop offset="0" stop-color="#4a63bd"/>
+              <stop offset=".55" stop-color="#243a86"/>
+              <stop offset="1" stop-color="#131f4d"/>
+            </radialGradient>
+          </defs>
+          <path d="M50 4c9 0 12 7 20 9s14-2 19 6-2 14 0 22 8 12 3 20-13 4-19 10-5 13-14 15-13-5-21-5-12 7-20 3-5-11-9-18-12-9-12-18 8-11 10-19-2-14 5-19 12 2 20-1S41 4 50 4z"
+                fill="url(#waxg)"/>
+          <g fill="none" stroke="#0e1738" stroke-opacity=".45" stroke-width="1.6">
+            <circle cx="50" cy="50" r="30"/>
+          </g>
+          <g id="seal-mark" fill="#0e1738" fill-opacity=".38">
+            <path d="M50 32c9 0 15 7 15 16 0 11-7 19-15 23-8-4-15-12-15-23 0-9 6-16 15-16z"/>
+          </g>
+          <text x="50" y="56" text-anchor="middle" font-family="Playfair Display,serif"
+                font-size="20" font-weight="700" fill="#c9d4ea" fill-opacity=".85" id="seal-txt">C</text>
+        </svg>
+
+        <div class="curl" aria-hidden="true"></div>
+
+        <footer class="leaf-foot">
+          <span id="f-left">—</span>
+          <span class="sig" id="f-sig">—</span>
+          <span class="catch" id="f-catch">—</span>
+        </footer>
+      </article>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ВСЕ БУМАГИ ═══ -->
+<div class="sheaf" id="sheaf" role="dialog" aria-modal="true" aria-label="Все бумаги">
+  <button class="close" id="close-sheaf">Закрыть</button>
+  <div class="sheaf-inner" id="sheaf-inner"></div>
+</div>
+
+<script>
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║  ✎  ВСЁ РЕДАКТИРУЕТСЯ ЗДЕСЬ И БОЛЬШЕ НИГДЕ.               ║
+   ║  Текст пиши между косыми кавычками ` ` .                   ║
+   ║  Внутри можно « », — , ’ ; нельзя только сам знак ` .      ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+
+const CHARACTER = {
+
+  name:    `Селест д’Отёй`,
+  role:    `в роли самой себя`,          // строка под именем на афише
+  tagline: `Француженка в Лондоне. Поёт только в маске и только когда идёт дождь.`,
+
+  theatre: `Королевский театр, Друри-Лейн`,
+  when:    `В среду, 14 мая 1856 года`,
+  signature: `С. д’Отёй`,                // подпись внизу листа
+  initial: `C`,                          // буква, оттиснутая на сургуче
+
+  portrait: ``,                          // ✎ ссылка на портрет (будет затонирован под гравюру)
+  plateCaption: `Съ натуры. Лондонъ, 1856`,
+
+  leaves: [
+
+    { num:`I`, label:`Имя, фамилия`, short:`Имя`,
+      answer:`Селест д’Отёй`,
+      note:`На афишах — «мадемуазель Селест». В приютских книгах записана по названию улицы, на которой стоял фонтан.`,
+      margin:`фамилию просит писать полностью`,
+      seal:true
+    },
+
+    { num:`II`, label:`Возраст`, short:`Лета`,
+      answer:`двадцать четыре`,
+      note:`На вид. Настоящего не называет и заметно злится, если спросить дважды.`,
+      margin:`сомнительно. свериться с записями`
+    },
+
+    { num:`III`, label:`Сущность`, short:`Природа`,
+      answer:`дитя фонтана`,
+      note:`Полукровка водной феи и человека. Тело помнит воду лучше, чем сушу: без неё голос садится за сутки.`,
+      seal:true
+    },
+
+    { num:`IV`, label:`Положение`, short:`Званіе`,
+      answer:`первая певица`,
+      note:`Ангажирована на сезон. Приглашена ко двору — числится гостьей, слывёт главной сплетней.`,
+      margin:`уборная № 1, ближе к воде`
+    },
+
+    { num:`V`, label:`Внешность`, short:`Наружность`,
+      prose:[
+        `Высока, тонка в кости, с осанкой особы, которую с малых лет учили держать спину под светом рампы. Кожа фарфоровой бледности, и на солнце по ней идёт перламутровый отлив — как по внутренней стороне раковины.`,
+        `Волосы цвета мокрого сапфира, до плеч, всегда уложены волной. Глаза разные: правый тёмно-синий, левый прозрачно-голубой, почти белёсый. Маску носит так, чтобы левый оставался в тени.`,
+        `Наряд — сплошной карнавал: атлас, серебряная тесьма, жабо в три яруса, перчатки выше локтя. Под левым глазом нарисована синяя слеза. Она смывается. Селест рисует её заново каждое утро.`
+      ],
+      margin:`костюмерной: жабо рвётся на поклоне`
+    },
+
+    { num:`VI`, label:`Характер`, short:`Нравъ`,
+      traits:[`Театральна`,`Упряма`,`Щедра`,`Боится тишины`,`Красиво лжёт`],
+      prose:[
+        `Живёт на публику и знает это за собой. Всякую неловкую паузу закрывает шуткой, всякий серьёзный разговор — поклоном и переменой темы. Со стороны кажется, что ей всё даётся легко.`,
+        `На деле внимательна к людям и запоминает мелочи: кто как пьёт чай, у кого дрожат руки, кто второй вечер подряд сидит в дальней ложе один. Помощь предлагает как одолжение — чтобы никого не смутить.`,
+        `Не выносит, когда её жалеют. Охотнее примет насмешку, нежели сочувствие.`
+      ],
+      saying:{ text:`Рукоплескания — единственный дождь, под которым я не мёрзну.`, by:`реплика в третьем действии` }
+    },
+
+    { num:`VII`, label:`Предыстория`, short:`Прошлое`,
+      prose:[
+        `Её нашли в чаше городского фонтана в ночь после карнавала — в мокром бархате, без бумаг, лет трёх на вид. Никто не признался, чей это ребёнок. Приют записал её под именем улицы.`,
+        `Петь начала прежде, чем говорить связно. В четырнадцать её услышал антрепренёр и увёз в Лондон: сперва в хор, затем на вторые роли, затем на все первые сразу. К двадцати о ней писали афиши, к двадцати двум — газеты.`,
+        `Тогда же выяснилось неприятное. Голос работает лишь подле воды; в сухой зале она хрипнет и срывается посреди арии. С тех пор всякое выступление идёт под открытым небом или под дождевальными арками, а сама она не отходит далеко от реки.`,
+        `Ко двору её позвали этой весной. Приглашение подписано без имени — одним оттиском маски.`
+      ],
+      seal:true
+    },
+
+    { num:`VIII`, label:`Хэдканоны`, short:`Мелочи`,
+      canons:[
+        `Спит с открытым окном в любую погоду: без шума дождя не засыпает.`,
+        `Собирает чужие маски. Свою не снимает даже наедине с собою — говорит, что забыла, как выглядит.`,
+        `Чай пьёт только холодным, с мятой, солью и лимоном. Попробовать не даёт никому.`,
+        `Умеет фехтовать, но скрывает: это единственное, чему её учили не для сцены.`
+      ],
+      margin:`лист необязательный — можно изъять`
+    },
+
+    { num:`IX`, label:`Ваш юз`, short:`Рука`,
+      handle:`@your_username`,
+      link:`#`,
+      note:`Веду от третьего лица, в прошедшем времени. Отвечаю в течение дня. О завязках — в личные сообщения.`,
+      seal:true
+    }
+
+  ]
+};
+
+/* ───────── дальше можно не трогать ───────── */
+(function(){
+  const L = CHARACTER.leaves;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = i => document.getElementById(i);
+  const ROMAN = ['i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii'];
+
+  $('b-theatre').textContent = CHARACTER.theatre;
+  $('b-when').textContent    = CHARACTER.when;
+  $('b-name').textContent    = CHARACTER.name;
+  $('b-role').textContent    = CHARACTER.role;
+  $('b-tag').textContent     = CHARACTER.tagline;
+  $('t-name').textContent    = CHARACTER.name;
+  $('t-sub').textContent     = CHARACTER.theatre;
+  $('plate-cap').textContent = CHARACTER.plateCaption;
+  $('seal-txt').textContent  = CHARACTER.initial;
+  document.title = CHARACTER.name;
+
+  /* фронтиспис */
+  const win = $('plate-win');
+  if(CHARACTER.portrait){
+    win.innerHTML =
+      `<img src="${CHARACTER.portrait}" alt="Портрет: ${CHARACTER.name}">
+       <span class="tone"></span><span class="veil"></span>`;
+  } else {
+    win.innerHTML =
+      `<svg viewBox="0 0 90 120" style="width:100%;height:100%" aria-hidden="true">
+         <g stroke="#141f38" stroke-width=".5" opacity=".35">
+           <path d="M0 6h90M0 14h90M0 22h90M0 30h90M0 38h90M0 46h90M0 54h90M0 62h90M0 70h90M0 78h90M0 86h90M0 94h90M0 102h90M0 110h90M0 118h90"/>
+         </g>
+         <path d="M45 26c14 0 22 11 22 25 0 17-10 30-22 36-12-6-22-19-22-36 0-14 8-25 22-25z" fill="#dae3ec"/>
+         <path d="M45 49c-5-6-15-7-20-2-2 4-1 11 5 15 6 2 12-2 15-7 3 5 9 9 15 7 6-4 7-11 5-15-5-5-15-4-20 2z" fill="#141f38"/>
+         <path d="M32 52c3-4 10-5 13-2-3 4-10 6-13 2z" fill="#dae3ec"/>
+         <path d="M58 52c-3-4-10-5-13-2 3 4 10 6 13 2z" fill="#dae3ec"/>
+         <path d="M37 63c2 3 3 6 3 7a3.6 3.6 0 0 1-6.6 0c0-1.4 1.6-4 3.6-7z" fill="#141f38"/>
+       </svg>`;
+  }
+
+  function build(l){
+    let h = '';
+    if(l.answer) h += `<p class="answer">${l.answer}</p><span class="ruleline"></span>`;
+    if(l.handle) h += `<a class="handle" href="${l.link||'#'}">${l.handle}</a>`;
+    if(l.traits) h += `<ul class="traits">${l.traits.map(t=>`<li>${t}</li>`).join('')}</ul>`;
+    if(l.prose)  h += `<div class="prose">${l.prose.map(p=>`<p>${p}</p>`).join('')}</div>`;
+    if(l.canons) h += `<ul class="canons">${l.canons.map(c=>`<li>${c}</li>`).join('')}</ul>`;
+    if(l.saying) h += `<blockquote class="saying">${l.saying.text}<span>${l.saying.by}</span></blockquote>`;
+    if(l.note)   h += `<p class="note">${l.note}</p>`;
+    if(l.margin) h += `<p class="margin-note">${l.margin}</p>`;
+    return h;
+  }
+
+  /* оглавление */
+  const list = $('index-list');
+  L.forEach((l,i)=>{
+    const b = document.createElement('button');
+    b.className='entry'; b.type='button';
+    b.setAttribute('aria-current','false');
+    b.setAttribute('aria-label', l.num+'. '+l.label);
+    b.innerHTML =
+      `<span class="rn">${l.num}.</span><span class="nm">${l.short||l.label}</span>`+
+      `<i class="dots"></i><span class="pg">${ROMAN[i]}</span>`;
+    b.addEventListener('click', ()=>go(i));
+    list.appendChild(b);
+  });
+  const entries = [...list.children];
+
+  const leaf = $('leaf');
+  let cur = -1, busy = false;
+
+  function paint(i){
+    const l = L[i];
+    $('l-over').textContent  = CHARACTER.theatre;
+    $('l-rn').textContent    = 'Лист ' + l.num;
+    $('l-title').textContent = l.label;
+    $('l-body').innerHTML    = build(l);
+    $('l-body').scrollTop    = 0;
+
+    $('seal').style.display = l.seal ? '' : 'none';
+
+    $('f-left').textContent = ROMAN[i];
+    $('f-sig').textContent  = CHARACTER.signature;
+    const nxt = L[i+1];
+    $('f-catch').textContent = nxt ? nxt.label.split(/[\s,]+/)[0] : 'finis';
+
+    entries.forEach((e,k)=>e.setAttribute('aria-current', k===i?'true':'false'));
+    entries[i].scrollIntoView({block:'nearest',inline:'center',behavior:reduced?'auto':'smooth'});
+    cur = i;
+  }
+
+  function go(i){
+    if(i===cur || busy) return;
+    if(reduced || cur===-1){ paint(i); return; }
+    busy = true;
+    leaf.classList.remove('in'); leaf.classList.add('out');
+    setTimeout(()=>{
+      paint(i);
+      leaf.classList.remove('out'); leaf.classList.add('in');
+      setTimeout(()=>{ leaf.classList.remove('in'); busy=false; }, 820);
+    }, 320);
+  }
+
+  addEventListener('keydown', e=>{
+    if($('sheaf').classList.contains('on')){ if(e.key==='Escape') closeSheaf(); return; }
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') go(Math.min(cur+1,L.length-1));
+    if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   go(Math.max(cur-1,0));
+    const n = parseInt(e.key,10);
+    if(n>=1 && n<=L.length) go(n-1);
+  });
+
+  /* свайп */
+  let x0=null;
+  leaf.addEventListener('pointerdown', e=>{ x0=e.clientX; });
+  leaf.addEventListener('pointerup', e=>{
+    if(x0===null) return;
+    const d = e.clientX-x0; x0=null;
+    if(Math.abs(d)>60) go(d<0 ? Math.min(cur+1,L.length-1) : Math.max(cur-1,0));
+  });
+
+  /* афиша ↔ бумаги */
+  const bs = $('bill-screen');
+  $('enter').addEventListener('click', ()=>{ bs.classList.add('gone'); setTimeout(()=>go(0), reduced?0:250); });
+  $('back-bill').addEventListener('click', ()=>{ bs.classList.remove('gone'); $('enter').focus(); });
+
+  /* все бумаги */
+  const sheaf = $('sheaf');
+  $('sheaf-inner').innerHTML =
+    `<h2>${CHARACTER.name}</h2><div class="divider"><i></i>❦<i></i></div>` +
+    L.map(l=>`<section><h3>${l.num}. ${l.label}</h3>${build(l)}</section>`).join('');
+  function closeSheaf(){ sheaf.classList.remove('on'); $('open-sheaf').focus(); }
+  $('open-sheaf').addEventListener('click', ()=>{ sheaf.classList.add('on'); $('close-sheaf').focus(); });
+  $('close-sheaf').addEventListener('click', closeSheaf);
+})();
+</script>
+</body>
+</html>
