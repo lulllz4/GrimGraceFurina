@@ -279,7 +279,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   max-height:100%;
   transition:width .45s cubic-bezier(.2,.9,.3,1);
 }
-.stack.wide{width:min(100%,60rem)}
+.stack.wide{
+  width:min(100%,60rem);
+  display:grid;
+  align-content:center;
+  align-content:safe center;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:rgba(168,135,76,.35) transparent;
+}
+.stack.wide::-webkit-scrollbar{width:5px}
+.stack.wide::-webkit-scrollbar-thumb{background:rgba(168,135,76,.35)}
 
 .under{
   position:absolute;inset:0;
@@ -467,18 +476,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
 /* ═══════════ ГАЗЕТНАЯ ВЫРЕЗКА ═══════════ */
 .cutting{
-  position:absolute;inset:0;
-  filter:drop-shadow(0 40px 46px rgba(0,0,0,.85));
+  position:relative;
+  filter:drop-shadow(0 26px 40px rgba(0,0,0,.85));
   display:none;
-  place-items:center;align-content:center;
 }
 .stack.wide .under{display:none}
 .cut-paper{
-  position:relative;width:100%;height:auto;max-height:100%;
+  position:relative;width:100%;height:auto;
   color:var(--news-ink);
   background:linear-gradient(172deg,#efe8d6 0%,var(--news) 40%,var(--news-2) 100%);
   padding:clamp(1rem,2.6vw,1.9rem) clamp(1rem,3vw,2.2rem) clamp(1.2rem,3vw,2rem);
-  display:grid;grid-template-rows:auto auto minmax(0,auto);
+  display:grid;grid-template-rows:auto auto auto;
   overflow:hidden;
 }
 .cut-paper::before{
@@ -523,13 +531,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .cut-cols{
   columns:2;column-gap:1.3rem;
   column-rule:1px solid rgba(36,31,23,.35);
-  overflow:auto;min-height:0;min-width:0;
-  font-size:clamp(.7rem,.66rem + .2vw,.8rem);
+  min-width:0;
+  font-size:clamp(.74rem,.7rem + .2vw,.84rem);
   line-height:1.62;text-align:justify;hyphens:auto;
-  scrollbar-width:thin;scrollbar-color:rgba(36,31,23,.3) transparent;
 }
-.cut-cols::-webkit-scrollbar{width:4px}
-.cut-cols::-webkit-scrollbar-thumb{background:rgba(36,31,23,.3)}
 .cut-cols p{margin-bottom:.45em;text-indent:1.1em}
 .cut-cols p:first-child{text-indent:0}
 .cut-cols .item{text-indent:0;padding-left:1em;text-indent:-1em}
@@ -571,9 +576,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 }
 
 @media (max-width:840px){
-  .cut-main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
-  .cut-photo{width:6.5rem;justify-self:center;order:-1;margin-bottom:.4rem}
-  .cut-cols{columns:1;text-align:left}
+  .cut-main{grid-template-columns:1fr;grid-template-rows:auto auto}
+  .cut-side{order:-1;display:grid;justify-items:center;margin-bottom:.6rem}
+  .cut-photo{width:min(9.5rem,42vw)}
+  .cut-cols{columns:1;text-align:left;font-size:.84rem;line-height:1.7}
+  .cut-head .line{flex-direction:column;gap:.15rem;align-items:center;font-size:.5rem}
+  .cut-lead .deck{letter-spacing:.12em;font-size:.56rem;line-height:1.7}
+  .cut-lead h2{letter-spacing:0}
 }
 
 /* перекладывание бумаг */
@@ -620,7 +629,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
     grid-row:2;grid-template-rows:none;grid-template-columns:auto minmax(0,1fr);
     gap:.5rem;align-items:center;
   }
-  .plate{width:3.4rem;padding:.25rem;transform:none}
+  .plate{width:4.2rem;padding:.28rem;transform:none;flex:none}
+  .top .nm,.top .sub{max-width:52vw}
   .plate cap{display:none}
   .index{
     transform:none;padding:.4rem .5rem;overflow-x:auto;overflow-y:hidden;
@@ -1023,7 +1033,7 @@ const CHARACTER = {
           ${items}
           ${tail}
         </div>
-        <div>
+        <div class="cut-side">
           ${photoBlock()}
           ${active.margin?`<p class="cut-pencil">${active.margin}</p>`:''}
         </div>
@@ -1065,7 +1075,8 @@ const CHARACTER = {
 
     if(l.clip){
       $('cut-paper').innerHTML = buildCutting(i);
-      cutting.style.display='grid'; leaf.style.display='none';
+      cutting.style.display='block'; leaf.style.display='none';
+      stack.scrollTop=0;
       stack.classList.add('wide');
       markIndex(i); cur=i; return;
     }
