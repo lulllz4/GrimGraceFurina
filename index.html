@@ -6,7 +6,7 @@
 <title>Бумаги</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,600&family=Vollkorn:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,600&family=Vollkorn:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -27,6 +27,13 @@
   --wax:#243a86;
   --gilt:#a8874c;
 
+  /* газетная бумага */
+  --news:#e9e1cd;
+  --news-2:#dbd1b8;
+  --news-ink:#241f17;
+  --news-ink-2:#4d4534;
+
+  --black:"UnifrakturMaguntia",serif;
   --disp:"Playfair Display",Georgia,serif;
   --text:"Vollkorn",Georgia,serif;
   --hand:"Marck Script",cursive;
@@ -170,6 +177,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
 .desk{
   min-height:0;
+  width:min(100%,90rem);
+  margin-inline:auto;
   display:grid;
   grid-template-columns:minmax(13rem,17rem) minmax(0,1fr);
   gap:clamp(.8rem,2.5vw,2rem);
@@ -238,7 +247,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   font-size:.82rem;
   transition:color .22s;
 }
-.entry .rn{font-family:var(--disp);font-weight:700;font-size:.72rem;letter-spacing:.04em;flex:none;min-width:1.9rem}
+.entry .rn{font-family:var(--disp);font-weight:700;font-size:.72rem;letter-spacing:.02em;
+  flex:none;min-width:1.9rem;white-space:nowrap}
 .entry .nm{flex:none;white-space:nowrap}
 .entry .dots{flex:1;border-bottom:1px dotted rgba(20,31,56,.45);translate:0 -.22rem;min-width:.8rem}
 .entry .pg{font-family:var(--disp);font-size:.7rem;flex:none;opacity:.7}
@@ -253,7 +263,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 @keyframes point{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 
 /* ═══════════ ЛИСТ ═══════════ */
-.leaf-area{position:relative;min-height:0}
+.leaf-area{position:relative;min-height:0;display:grid;place-items:center}
+.stack{
+  position:relative;
+  width:min(100%,50rem);
+  height:min(100%,46rem);
+  max-height:100%;
+  transition:width .45s cubic-bezier(.2,.9,.3,1);
+}
+.stack.wide{width:min(100%,60rem)}
 
 .under{
   position:absolute;inset:0;
@@ -332,12 +350,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 /* рукописные ответы на короткие пункты */
 .answer{
   font-family:var(--hand);
-  font-size:clamp(2.2rem,1.2rem + 4.6vw,4rem);
-  line-height:1.1;color:var(--wax);
+  font-size:clamp(2.1rem,1.2rem + 3.4vw,3.4rem);
+  line-height:1.3;color:var(--wax);
   transform:rotate(-.8deg);
-  margin:.4rem 0 .2rem;
+  margin:.5rem 0 0;
+  padding-bottom:.12em;
 }
-.ruleline{height:0;border-bottom:1px solid rgba(20,31,56,.35);margin:.2rem 0 1.1rem}
+.ruleline{height:0;border-bottom:1px solid rgba(20,31,56,.35);margin:.7rem 0 1.4rem}
 
 .note{font-size:clamp(.86rem,.82rem + .22vw,.98rem);line-height:1.8;
   color:var(--ink-2);font-style:italic;max-width:52ch}
@@ -386,6 +405,29 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   border-left:1px solid rgba(61,78,112,.4);transform:rotate(-1deg);max-width:32ch;
 }
 
+/* короткий лист набирается по центру, как титул */
+.leaf--brief .leaf-body{
+  display:grid;align-content:center;justify-items:center;
+  text-align:center;padding-bottom:2rem;
+}
+.leaf--brief .answer{
+  font-size:clamp(2.4rem,1.4rem + 3.8vw,4.2rem);
+  transform:rotate(-.6deg);
+}
+.leaf--brief .ruleline{width:min(100%,24rem);margin:.9rem 0 1.5rem}
+.leaf--brief .handle{transform:rotate(-1deg)}
+.leaf--brief .note{text-align:center;max-width:40ch}
+.leaf--brief .margin-note{
+  border-left:0;border-top:1px dashed rgba(61,78,112,.45);
+  padding:.9rem 0 0;margin-top:1.8rem;transform:rotate(-.5deg);
+  text-align:center;max-width:34ch;
+}
+.brief-orn{
+  display:flex;align-items:center;justify-content:center;gap:.8rem;
+  color:var(--ink-2);opacity:.6;margin-top:2.4rem;width:min(100%,18rem);
+}
+.brief-orn i{height:1px;flex:1;background:currentColor}
+
 /* сургучная печать */
 .seal{
   position:absolute;z-index:3;
@@ -409,6 +451,120 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .leaf-foot .sig{font-family:var(--hand);font-size:1.5rem;letter-spacing:0;text-transform:none;
   color:var(--wax);transform:rotate(-2deg);line-height:1}
 
+.facts{margin-bottom:1rem}
+.facts dt{font-family:var(--disp);font-weight:700;font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-2);margin-top:.9rem}
+.facts dd{font-family:var(--hand);font-size:1.6rem;color:var(--wax);line-height:1.35}
+.facts dd i{display:block;font-family:var(--text);font-size:.9rem;color:var(--ink-2);line-height:1.7;margin-top:.2rem}
+
+/* ═══════════ ГАЗЕТНАЯ ВЫРЕЗКА ═══════════ */
+.cutting{
+  position:absolute;inset:0;
+  filter:drop-shadow(0 40px 46px rgba(0,0,0,.85));
+  display:none;
+}
+.cut-paper{
+  position:relative;height:100%;
+  color:var(--news-ink);
+  background:linear-gradient(172deg,#efe8d6 0%,var(--news) 40%,var(--news-2) 100%);
+  padding:clamp(1rem,2.6vw,1.9rem) clamp(1rem,3vw,2.2rem) clamp(1.2rem,3vw,2rem);
+  display:grid;grid-template-rows:auto auto minmax(0,1fr);
+  overflow:hidden;
+}
+.cut-paper::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;mix-blend-mode:multiply;
+  background-image:var(--grain),
+    radial-gradient(circle at 12% 12%, rgba(120,90,40,.2), transparent 13%),
+    radial-gradient(circle at 90% 30%, rgba(120,90,40,.16), transparent 10%),
+    radial-gradient(circle at 64% 92%, rgba(120,90,40,.18), transparent 12%),
+    radial-gradient(circle at 30% 66%, rgba(120,90,40,.12), transparent 9%);
+  opacity:.85;
+}
+.cut-paper > *{position:relative;z-index:1}
+
+.cut-head{text-align:center;border-bottom:1px solid var(--news-ink);padding-bottom:.4rem}
+.cut-head .masthead{
+  font-family:var(--black);
+  font-size:clamp(1.9rem,1.1rem + 3.2vw,3.4rem);
+  line-height:1;color:var(--news-ink);
+}
+.cut-head .line{
+  display:flex;justify-content:space-between;gap:1rem;
+  font-family:var(--disp);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--news-ink-2);border-top:1px solid var(--news-ink);margin-top:.35rem;padding-top:.3rem;
+}
+.cut-lead{text-align:center;padding:.7rem 0 .5rem;border-bottom:3px double var(--news-ink)}
+.cut-lead h2{
+  font-family:var(--disp);font-weight:900;text-transform:uppercase;
+  font-size:clamp(1rem,.7rem + 1.5vw,1.6rem);line-height:1.05;letter-spacing:.02em;
+}
+.cut-lead .deck{
+  font-family:var(--disp);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--news-ink-2);margin-top:.4rem;line-height:1.9;
+}
+.cut-lead .deck i{display:block;font-style:normal}
+.cut-lead .deck i+i{border-top:1px solid rgba(36,31,23,.3);margin-top:.25rem;padding-top:.25rem}
+
+.cut-main{
+  display:grid;grid-template-columns:minmax(0,1fr) clamp(8rem,17%,11rem);
+  gap:clamp(.8rem,2vw,1.4rem);min-height:0;padding-top:.7rem;
+}
+.cut-cols{
+  columns:2;column-gap:1.3rem;
+  column-rule:1px solid rgba(36,31,23,.35);
+  overflow:auto;min-height:0;
+  font-size:clamp(.7rem,.66rem + .2vw,.8rem);
+  line-height:1.62;text-align:justify;hyphens:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(36,31,23,.3) transparent;
+}
+.cut-cols::-webkit-scrollbar{width:4px}
+.cut-cols::-webkit-scrollbar-thumb{background:rgba(36,31,23,.3)}
+.cut-cols p{margin-bottom:.45em;text-indent:1.1em}
+.cut-cols p:first-child{text-indent:0}
+.cut-cols .item{text-indent:0;padding-left:1em;text-indent:-1em}
+.cut-cols .item b{
+  font-family:var(--disp);font-weight:700;font-size:.9em;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.cut-cols .item i{color:var(--news-ink-2)}
+.cut-cols .item.on b{
+  box-shadow:inset 0 -.5em 0 rgba(36,58,134,.22);
+}
+.cut-cols .mano{color:var(--wax);margin-right:.25em}
+.cut-cols .sub{
+  display:block;text-align:center;font-family:var(--disp);font-weight:700;
+  font-size:.62em;letter-spacing:.22em;text-transform:uppercase;
+  border-top:1px solid rgba(36,31,23,.4);border-bottom:1px solid rgba(36,31,23,.4);
+  padding:.3em 0;margin:.7em 0 .5em;text-indent:0;
+}
+
+/* фотокарточка на булавке */
+.cut-photo{position:relative;align-self:start;transform:rotate(2.2deg)}
+.cut-photo .mount{
+  background:linear-gradient(170deg,#f3eee0,#ddd4bf);
+  padding:.42rem .42rem .7rem;
+  box-shadow:0 10px 18px -10px rgba(0,0,0,.7),0 0 0 1px rgba(36,31,23,.25);
+}
+.cut-photo .win{position:relative;aspect-ratio:3/4;overflow:hidden;background:#b9b09a;display:grid;place-items:center}
+.cut-photo .win img{width:100%;height:100%;object-fit:cover;object-position:top center;
+  filter:grayscale(1) sepia(.32) contrast(1.3) brightness(1.02)}
+.cut-photo .win .veil{position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(36,31,23,.16) 0 1px,transparent 1px 3px)}
+.cut-photo cap{display:block;text-align:center;font-family:var(--disp);
+  font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--news-ink-2);margin-top:.4rem}
+.cut-photo .pin{position:absolute;top:-9px;left:50%;translate:-50% 0;width:16px;height:26px;
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.5))}
+.cut-pencil{
+  font-family:var(--hand);font-size:clamp(.95rem,.85rem + .5vw,1.25rem);
+  color:#2f3f6b;line-height:1.25;margin-top:.8rem;transform:rotate(-1.6deg);text-align:center;
+}
+
+@media (max-width:840px){
+  .cut-main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .cut-photo{width:6.5rem;justify-self:center;order:-1;margin-bottom:.4rem}
+  .cut-cols{columns:1;text-align:left}
+}
+
 /* перекладывание бумаг */
 @keyframes lay-out{to{transform:translate(-13%,9%) rotate(-6deg);opacity:0}}
 @keyframes lay-in{
@@ -417,8 +573,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   80%{transform:translate(0,-.4%) rotate(.4deg)}
   100%{transform:translate(0,0) rotate(-.4deg);opacity:1}
 }
-.leaf.out{animation:lay-out .32s cubic-bezier(.55,0,.9,.35) forwards}
-.leaf.in{animation:lay-in .8s cubic-bezier(.2,.9,.3,1) both}
+.leaf.out,.cutting.out{animation:lay-out .32s cubic-bezier(.55,0,.9,.35) forwards}
+.leaf.in,.cutting.in{animation:lay-in .8s cubic-bezier(.2,.9,.3,1) both}
 
 /* ═══════════ ВСЕ БУМАГИ ═══════════ */
 .sheaf{
@@ -570,6 +726,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
     </div>
 
     <div class="leaf-area">
+     <div class="stack">
       <div class="under u2" aria-hidden="true"></div>
       <div class="under u1" aria-hidden="true"></div>
 
@@ -611,6 +768,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
           <span class="catch" id="f-catch">—</span>
         </footer>
       </article>
+
+      <article class="cutting" id="cutting"><div class="cut-paper" id="cut-paper"></div></article>
+     </div>
     </div>
   </div>
 </div>
@@ -639,34 +799,56 @@ const CHARACTER = {
   signature: `С. д’Отёй`,                // подпись внизу листа
   initial: `C`,                          // буква, оттиснутая на сургуче
 
-  portrait: `https://lulllz4.github.io/GrimGraceFurina/furina.jpg`,                          // ✎ ссылка на портрет (будет затонирован под гравюру)
+  portrait: `https://lulllz4.github.io/GrimGraceFurina/furina.jpg`,                
   plateCaption: `Съ натуры. Лондонъ, 1856`,
+
+  /* ── ГАЗЕТНАЯ ВЫРЕЗКА: сюда попадают листы I–IV ── */
+  cutting: {
+    paper: `The Times`,
+    left:  `Лондонъ, пятница, 1 октября 1852`,
+    right: `Цѣна пять пенсовъ`,
+
+    headline: `Француженка въ Друри-Лейнѣ`,
+    deck: [`Новое имя на афишахъ королевскаго театра`,
+           `Толки о происхожденіи · Опроверженіе антрепренёра`],
+
+    photo: ``,                                  // ✎ ссылка на фотокарточку
+    photoCaption: `Съ дагерротипа`,
+
+    lede: `Со среды въ королевскомъ театрѣ поётъ особа, о которой третій день говоритъ весь Стрэндъ. Редакція, не имѣя намѣренія поощрять слухи, приводитъ свѣдѣнія, сообщённыя конторою театра.`,
+
+    tail: [
+      `Управляющій театромъ отказался объясниться о причинахъ, по коимъ всѣ выступленія назначены подъ открытымъ небомъ либо подъ дождевальными арками, сославшись на «требованія голоса».`,
+      `Ложи на будущую недѣлю разобраны. Мѣста въ партерѣ отпускаются съ утра.`
+    ]
+  },
 
   leaves: [
 
-    { num:`I`, label:`Имя, фамилия`, short:`Имя`,
-      answer:`Селест д’Отёй`,
-      note:`На афишах — «мадемуазель Селест». В приютских книгах записана по названию улицы, на которой стоял фонтан.`,
-      margin:`фамилию просит писать полностью`,
-      seal:true
+    /* ═══ ОДИН ПУНКТ: имя + возраст + статус, газетной вырезкой ═══ */
+    { num:`I·II·IV`, label:`Изъ газетъ`, short:`Газета`, clip:true,
+      facts:[
+        { num:`I`,  label:`Имя, фамилия`,
+          answer:`Селест д’Отёй`,
+          note:`На афишахъ — «мадемуазель Селестъ». Въ приютскихъ книгахъ записана по названію улицы, гдѣ стоялъ фонтанъ.` },
+
+        { num:`II`, label:`Возрастъ`,
+          answer:`двадцать четыре года`,
+          note:`Со словъ конторы. Сама годовъ не называетъ и заметно злится, ежели спросить дважды.` },
+
+        { num:`IV`, label:`Положеніе`,
+          answer:`первая пѣвица театра`,
+          note:`Ангажирована на сезонъ. Приглашена ко двору — числится гостьей, слыветъ главною сплетнею.` }
+      ],
+      margin:`уборная № 1, ближе къ водѣ`
     },
 
-    { num:`II`, label:`Возраст`, short:`Лета`,
-      answer:`двадцать четыре`,
-      note:`На вид. Настоящего не называет и заметно злится, если спросить дважды.`,
-      margin:`сомнительно. свериться с записями`
-    },
-
+    /* ═══ дальше — обычные листы, каждый своей вкладкой ═══ */
     { num:`III`, label:`Сущность`, short:`Природа`,
       answer:`дитя фонтана`,
       note:`Полукровка водной феи и человека. Тело помнит воду лучше, чем сушу: без неё голос садится за сутки.`,
+      margin:`держать подле реки`,
       seal:true
-    },
-
-    { num:`IV`, label:`Положение`, short:`Званіе`,
-      answer:`первая певица`,
-      note:`Ангажирована на сезон. Приглашена ко двору — числится гостьей, слывёт главной сплетней.`,
-      margin:`уборная № 1, ближе к воде`
     },
 
     { num:`V`, label:`Внешность`, short:`Наружность`,
@@ -758,6 +940,8 @@ const CHARACTER = {
 
   function build(l){
     let h = '';
+    if(l.facts)  h += `<dl class="facts">${l.facts.map(f=>
+        `<dt>${f.num}. ${f.label}</dt><dd>${f.answer}${f.note?` <i>${f.note}</i>`:''}</dd>`).join('')}</dl>`;
     if(l.answer) h += `<p class="answer">${l.answer}</p><span class="ruleline"></span>`;
     if(l.handle) h += `<a class="handle" href="${l.link||'#'}">${l.handle}</a>`;
     if(l.traits) h += `<ul class="traits">${l.traits.map(t=>`<li>${t}</li>`).join('')}</ul>`;
@@ -766,8 +950,72 @@ const CHARACTER = {
     if(l.saying) h += `<blockquote class="saying">${l.saying.text}<span>${l.saying.by}</span></blockquote>`;
     if(l.note)   h += `<p class="note">${l.note}</p>`;
     if(l.margin) h += `<p class="margin-note">${l.margin}</p>`;
+    if(brief(l)) h += `<div class="brief-orn" aria-hidden="true"><i></i>&#10087;<i></i></div>`;
     return h;
   }
+
+  /* лист считается коротким, если в нём нет длинных блоков */
+  function brief(l){ return !(l.prose || l.canons || l.saying || l.facts); }
+
+  /* ── газетная вырезка ── */
+  const C = CHARACTER.cutting || {};
+
+  function photoBlock(){
+    const inner = C.photo
+      ? `<img src="${C.photo}" alt="${CHARACTER.name}"><span class="veil"></span>`
+      : `<svg viewBox="0 0 60 80" style="width:100%;height:100%" aria-hidden="true">
+           <rect width="60" height="80" fill="#c6bda6"/>
+           <path d="M30 20c9 0 15 7 15 16 0 11-7 20-15 24-8-4-15-13-15-24 0-9 6-16 15-16z" fill="#eae4d3"/>
+           <path d="M30 35c-3-4-9-4-12-1-1 3 0 7 3 9 4 1 8-1 9-5 1 4 5 6 9 5 3-2 4-6 3-9-3-3-9-3-12 1z" fill="#3a3226"/>
+           <text x="30" y="72" text-anchor="middle" font-size="5" fill="#5d5443" font-family="serif">нѣтъ карточки</text>
+         </svg>`;
+    return `<figure class="cut-photo">
+        <svg class="pin" viewBox="0 0 16 26" aria-hidden="true">
+          <circle cx="8" cy="5" r="4.6" fill="#9fb0c8"/><circle cx="6.6" cy="3.6" r="1.5" fill="#e6eef8"/>
+          <path d="M8 9v15" stroke="#8794a8" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <div class="mount"><div class="win">${inner}</div></div>
+        <cap>${C.photoCaption||''}</cap>
+      </figure>`;
+  }
+
+  function buildCutting(idx){
+    const active = L[idx];
+    const items = (active.facts||[]).map(f=>
+      `<p class="item"><b>${f.num}. ${f.label}.</b> &mdash; ${f.answer}. <i>${f.note||''}</i></p>`
+    ).join('');
+    const tail = (C.tail||[]).map(t=>`<p>${t}</p>`).join('');
+    return `
+      <header class="cut-head">
+        <div class="masthead">${C.paper||'The Times'}</div>
+        <div class="line"><span>${C.left||''}</span><span>${C.right||''}</span></div>
+      </header>
+      <div class="cut-lead">
+        <h2>${C.headline||''}</h2>
+        <div class="deck">${(C.deck||[]).map(d=>`<i>${d}</i>`).join('')}</div>
+      </div>
+      <div class="cut-main">
+        <div class="cut-cols">
+          <p>${C.lede||''}</p>
+          <span class="sub">Свѣдѣнія конторы</span>
+          ${items}
+          ${tail}
+        </div>
+        <div>
+          ${photoBlock()}
+          ${active.margin?`<p class="cut-pencil">${active.margin}</p>`:''}
+        </div>
+      </div>`;
+  }
+
+  /* рваный край вырезки */
+  function tornEdge(el){
+    const pts=[], n=54, j=1.1;
+    for(let i=0;i<=n;i++) pts.push(`${(i/n*100).toFixed(2)}% ${(Math.random()*j).toFixed(2)}%`);
+    for(let i=n;i>=0;i--) pts.push(`${(i/n*100).toFixed(2)}% ${(100-Math.random()*j).toFixed(2)}%`);
+    el.style.clipPath = 'polygon('+pts.join(',')+')';
+  }
+  tornEdge($('cut-paper'));
 
   /* оглавление */
   const list = $('index-list');
@@ -777,7 +1025,7 @@ const CHARACTER = {
     b.setAttribute('aria-current','false');
     b.setAttribute('aria-label', l.num+'. '+l.label);
     b.innerHTML =
-      `<span class="rn">${l.num}.</span><span class="nm">${l.short||l.label}</span>`+
+      `<span class="rn">${l.num}${l.num.length>3?'':'.'}</span><span class="nm">${l.short||l.label}</span>`+
       `<i class="dots"></i><span class="pg">${ROMAN[i]}</span>`;
     b.addEventListener('click', ()=>go(i));
     list.appendChild(b);
@@ -787,13 +1035,27 @@ const CHARACTER = {
   const leaf = $('leaf');
   let cur = -1, busy = false;
 
+  const cutting = $('cutting');
+  const stack = document.querySelector('.stack');
+
   function paint(i){
     const l = L[i];
+
+    if(l.clip){
+      $('cut-paper').innerHTML = buildCutting(i);
+      cutting.style.display='block'; leaf.style.display='none';
+      stack.classList.add('wide');
+      markIndex(i); cur=i; return;
+    }
+    cutting.style.display='none'; leaf.style.display='';
+    stack.classList.remove('wide');
+
     $('l-over').textContent  = CHARACTER.theatre;
     $('l-rn').textContent    = 'Лист ' + l.num;
     $('l-title').textContent = l.label;
     $('l-body').innerHTML    = build(l);
     $('l-body').scrollTop    = 0;
+    leaf.classList.toggle('leaf--brief', brief(l));
 
     $('seal').style.display = l.seal ? '' : 'none';
 
@@ -802,20 +1064,27 @@ const CHARACTER = {
     const nxt = L[i+1];
     $('f-catch').textContent = nxt ? nxt.label.split(/[\s,]+/)[0] : 'finis';
 
+    markIndex(i);
+    cur = i;
+  }
+
+  function markIndex(i){
     entries.forEach((e,k)=>e.setAttribute('aria-current', k===i?'true':'false'));
     entries[i].scrollIntoView({block:'nearest',inline:'center',behavior:reduced?'auto':'smooth'});
-    cur = i;
   }
 
   function go(i){
     if(i===cur || busy) return;
     if(reduced || cur===-1){ paint(i); return; }
     busy = true;
-    leaf.classList.remove('in'); leaf.classList.add('out');
+    const from = (cur>=0 && L[cur].clip) ? cutting : leaf;
+    from.classList.remove('in'); from.classList.add('out');
     setTimeout(()=>{
+      from.classList.remove('out');
       paint(i);
-      leaf.classList.remove('out'); leaf.classList.add('in');
-      setTimeout(()=>{ leaf.classList.remove('in'); busy=false; }, 820);
+      const to = L[i].clip ? cutting : leaf;
+      to.classList.add('in');
+      setTimeout(()=>{ to.classList.remove('in'); busy=false; }, 820);
     }, 320);
   }
 
@@ -829,11 +1098,13 @@ const CHARACTER = {
 
   /* свайп */
   let x0=null;
-  leaf.addEventListener('pointerdown', e=>{ x0=e.clientX; });
-  leaf.addEventListener('pointerup', e=>{
+  [leaf,cutting].forEach(el=>{
+  el.addEventListener('pointerdown', e=>{ x0=e.clientX; });
+  el.addEventListener('pointerup', e=>{
     if(x0===null) return;
     const d = e.clientX-x0; x0=null;
     if(Math.abs(d)>60) go(d<0 ? Math.min(cur+1,L.length-1) : Math.max(cur-1,0));
+  });
   });
 
   /* афиша ↔ бумаги */
