@@ -756,7 +756,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
           <p class="over" id="l-over">—</p>
           <p class="rn" id="l-rn">—</p>
           <h2 id="l-title">—</h2>
-          <div class="divider" aria-hidden="true"><i></i>❦<i></i></div>
+          <div class="divider" aria-hidden="true"><i></i>°‧ 𓆝 𓆟 𓆞 ·｡<i></i></div>
         </header>
 
         <div class="leaf-body" id="l-body"></div>
@@ -1175,7 +1175,7 @@ const CHARACTER = {
   /* все бумаги */
   const sheaf = $('sheaf');
   $('sheaf-inner').innerHTML =
-    `<h2>${CHARACTER.name}</h2><div class="divider"><i></i>❦<i></i></div>` +
+    `<h2>${CHARACTER.name}</h2><div class="divider"><i></i>°‧ 𓆝 𓆟 𓆞 ·｡<i></i></div>` +
     L.map(l=>`<section><h3>${l.num}. ${l.label}</h3>${build(l)}</section>`).join('');
   function closeSheaf(){ sheaf.classList.remove('on'); $('open-sheaf').focus(); }
   $('open-sheaf').addEventListener('click', ()=>{ sheaf.classList.add('on'); $('close-sheaf').focus(); });
